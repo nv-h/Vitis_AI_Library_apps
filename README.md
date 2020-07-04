@@ -73,10 +73,10 @@ ultra96v2ではDPUが一つしか実装できないのでマルチスレッド�
 # Demo pictures
 
 yolov3_voc
-![yolov3_voc.png](images\yolov3_voc.png)
+![yolov3_voc.png](images/yolov3_voc.png)
 
 yolov2_voc
-![yolov2_voc.png](images\yolov2_voc.png)
+![yolov2_voc.png](images/yolov2_voc.png)
 
 ssd_mobilenet_v2
 ![ssd_mobilenet_v2.png](images/ssd_mobilenet_v2.png)
