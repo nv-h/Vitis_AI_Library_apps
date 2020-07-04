@@ -29,7 +29,8 @@ video_single_th_app <model_name> <video_num>
 
 # Performance (fps) on ultra96v2
 
-Using USB Web Camera C615 @640*360 (X forwarding)
+Using USB Web Camera C615 @640*360 (X forwarding).
+fpsは小数点以下切り捨てで測定した。同一条件でもけっこうばらつきがあると思われる。
 
 
 ## video_demo_app using `vitis::ai::main_for_video_demo()`
@@ -45,4 +46,10 @@ ultra96v2ではDPUが一つしか実装できないのでマルチスレッド�
 
 ## video_single_th_app
 
-未計測
+|          model           |      |
+|--------------------------|------|
+| `yolov3_adas_pruned_0_9` |   10 |
+| `yolov3_bdd`             |    3 |
+| `yolov3_voc`             |    3 |
+| `yolov3_voc_tf`          |    3 |
+

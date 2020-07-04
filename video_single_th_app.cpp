@@ -36,18 +36,27 @@ int main(int argc, char *argv[]) {
         cerr << "Error! Could not opened: /dev/video" << video_num <<  endl;
         return -1;
     }
+
+    // Xilinxデモに合わせたが、特に意味はない。
+    // ただし、大きくしすぎると表示に時間がかかる。
     cap.set(CV_CAP_PROP_FRAME_WIDTH, 640);
     cap.set(CV_CAP_PROP_FRAME_HEIGHT, 360);
 
     cv::Mat frame;
+    cv::TickMeter tm;
+    float fps = 0.0;
 
+    // ネットワークモデルごとに固有のオブジェクトを呼ぶ必要がある
     auto dpu_model = vitis::ai::YOLOv3::create(model_name);
 
+    tm.start();
     while (true) {
         cap >> frame;
+
+        // ネットワークモデルごとに返ってくる結果が違う(物体検知ならほぼ同じではある)
         auto dpu_result = dpu_model->run(frame);
 
-        auto result_frame = process_result_label(frame, dpu_result, labels);
+        auto result_frame = process_result_label(frame, dpu_result, labels, fps);
 
         cv::imshow("", result_frame);
         int key = cv::waitKey(1);
@@ -55,5 +64,12 @@ int main(int argc, char *argv[]) {
             break;
         }
 
+        if(tm.getCounter() > 0) {
+            fps = tm.getCounter() / tm.getTimeSec();
+        }
+        tm.stop();
+        tm.start();
     }
+
+    cap.release();
 }

@@ -81,7 +81,7 @@ static cv::Mat process_result(cv::Mat &image,
 
 static cv::Mat process_result_label(cv::Mat &image,
                               const vitis::ai::YOLOv3Result &result,
-                              vector<string> labels) {
+                              vector<string> labels, float fps) {
     for (const auto bbox : result.bboxes) {
         int label = bbox.label;
         auto color = getColor(label);
@@ -101,6 +101,11 @@ static cv::Mat process_result_label(cv::Mat &image,
         cv::putText(image, ss.str(), cv::Point(xmin, ymin-5),
             cv::FONT_HERSHEY_SIMPLEX, 0.5, color, 1);
     }
+
+    stringstream fps_ss;
+    fps_ss << "FPS: " << fixed << setprecision(2) << fps << endl;
+    cv::putText(image, fps_ss.str(), cv::Point(2, 16),
+        cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(200, 48, 48), 2);
 
     return image;
 }
