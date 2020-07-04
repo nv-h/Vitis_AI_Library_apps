@@ -30,7 +30,7 @@ video_single_th_app <model_name> <video_num>
 
 動作イメージ
 
-![yolov2_pruned_0_77.gif](images/yolov2_pruned_0_77.gif)
+![yolov2_pruned_0_77.gif](images/yolov2_pruned_0_77_compressed.gif)
 
 
 # Performance (fps) on ultra96v2
