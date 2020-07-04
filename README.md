@@ -41,14 +41,25 @@ fpsは小数点以下切り捨てで測定した。同一条件でもけっこ�
 
 ## video_demo_app using `vitis::ai::main_for_video_demo()`
 
-ultra96v2ではDPUが一つしか実装できないのでマルチスレッドの効果はほとんどない？
+ultra96v2ではDPUが一つしか実装できないのでDPUで律速になるような、重いモデルではマルチスレッドがほとんど効果がない。
 
-|          model           | -t 1 | -t 2 | -t 4 |
-|--------------------------|------|------|------|
-| `yolov3_adas_pruned_0_9` |   12 |   12 |   12 |
-| `yolov3_bdd`             |    5 |    5 |    5 |
-| `yolov3_voc`             |    5 |    5 |    5 |
-| `yolov3_voc_tf`          |    5 |    5 |    5 |
+|            model             | -t 1 | -t 2 | -t 4 |
+|------------------------------|------|------|------|
+| `yolov2_voc`                 |    8 |    9 |    9 |
+| `yolov2_voc_pruned_0_66`     |   21 |   23 |   24 |
+| `yolov2_voc_pruned_0_71`     |   24 |   26 |   28 |
+| `yolov2_voc_pruned_0_77`     |   27 |   28 |   29 |
+| `yolov3_adas_pruned_0_9`     |   11 |   11 |   12 |
+| `yolov3_bdd`                 |    4 |    5 |    5 |
+| `yolov3_voc`                 |    5 |    5 |    5 |
+| `yolov3_voc_tf`              |    5 |    5 |    5 |
+| `ssd_adas_pruned_0_95`       |   29 |   29 |   30 |
+| `ssd_mobilenet_v2`           |   10 |   10 |   10 |
+| `ssd_pedestrain_pruned_0_97` |   30 |   30 |   30 |
+| `ssd_traffic_pruned_0_9`     |   20 |   27 |   27 |
+| `ssd_mobilenet_v1_coco_tf`   |   21 |   21 |   22 |
+| `ssd_mobilenet_v2_coco_tf`   |   20 |   21 |   22 |
+| `ssd_resnet_50_fpn_coco_tf`  |    0 |    0 |    1 |
 
 ## video_single_th_app
 

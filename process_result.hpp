@@ -24,6 +24,10 @@
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
+#include <vitis/ai/yolov3.hpp>
+#include <vitis/ai/yolov2.hpp>
+#include <vitis/ai/ssd.hpp>
+#include <vitis/ai/tfssd.hpp>
 
 using namespace std;
 
@@ -240,7 +244,7 @@ static cv::Scalar getColor(int label) {
 }
 
 static cv::Mat process_result(cv::Mat &image,
-                              const vitis::ai::YOLOv3Result &result,
+                              const Result &result,
                               bool is_jpeg) {
     for (const auto bbox : result.bboxes) {
         int label = bbox.label;
@@ -263,6 +267,30 @@ static cv::Mat process_result(cv::Mat &image,
     }
 
     return image;
+}
+
+static cv::Mat process_result_yolov3(
+    cv::Mat &image, const vitis::ai::YOLOv3Result &result, bool is_jpeg) {
+    Result *result_p = (Result *)&result;
+    return process_result(image, *result_p, is_jpeg);
+}
+
+static cv::Mat process_result_yolov2(
+    cv::Mat &image, const vitis::ai::YOLOv2Result &result, bool is_jpeg) {
+    Result *result_p = (Result *)&result;
+    return process_result(image, *result_p, is_jpeg);
+}
+
+static cv::Mat process_result_ssd(
+    cv::Mat &image, const vitis::ai::SSDResult &result, bool is_jpeg) {
+    Result *result_p = (Result *)&result;
+    return process_result(image, *result_p, is_jpeg);
+}
+
+static cv::Mat process_result_tfssd(
+    cv::Mat &image, const vitis::ai::TFSSDResult &result, bool is_jpeg) {
+    Result *result_p = (Result *)&result;
+    return process_result(image, *result_p, is_jpeg);
 }
 
 static cv::Mat process_result_label(cv::Mat &image,

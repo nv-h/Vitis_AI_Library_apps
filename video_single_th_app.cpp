@@ -15,10 +15,10 @@
 // Vitis-AI-Library\overview\samples\yolov3\process_result.hpp
 #include "./process_result.hpp"
 
-// Xilinxデモに合わせたが、特に意味はない。
-// ただし、大きくしすぎると表示に時間がかかる。
+// HEIGHT=360は対応していないカメラがあるので、VGAにした。
 #define WIDTH 640
-#define HEIGHT 360
+#define HEIGHT 480
+#define FPS 60
 
 using namespace std;
 
@@ -59,7 +59,8 @@ int main(int argc, char *argv[]) {
 
     cap.set(CV_CAP_PROP_FRAME_WIDTH, WIDTH);
     cap.set(CV_CAP_PROP_FRAME_HEIGHT, HEIGHT);
-
+    cap.set(CV_CAP_PROP_FPS, FPS);
+ 
     cv::Mat frame;
     cv::TickMeter tm;
     float fps = 0.0;
