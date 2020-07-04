@@ -5,7 +5,6 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
-#include <glog/logging.h> // vitis/ai/demo.hpp で必要になる
 #include <vitis/ai/demo.hpp>
 #include <vitis/ai/yolov3.hpp>
 
@@ -16,6 +15,12 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
+    // モデルとして使用できる文字列は、以下に格納されているモデルだけと思われる。
+    //   /usr/share/vitis_ai_library/models
+    // 現状のyolov3の場合、以下の4つ
+    //   yolov3_adas_pruned_0_9, yolov3_bdd, yolov3_voc, yolov3_voc_tf
+    string model = argv[1];
+
     /* main_for_video_demo()は、Xilinxが用意しているデモ用の関数
      * int main_for_video_demo(
      *     int argc, char *argv[],
@@ -33,8 +38,6 @@ int main(int argc, char *argv[]) {
      *                      ラッパー関数(今回はこのmain())で引数を消費したら、その分ずらす
      *                      この例では、modelで一つ消費しているので2になる(0は無視)
      */
-    string model = argv[1];
-
     return vitis::ai::main_for_video_demo(
         argc, argv,
         [model] {
