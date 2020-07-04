@@ -37,6 +37,20 @@ static vector<string> VOC_map{
     "bus",         "car",     "cat",   "chair",     "cow",
     "diningtable", "dog",     "horse", "motorbike", "person",
     "pottedplant", "sheep",   "sofa",  "train",     "tvmonitor"};
+static vector<string> ssdadas_map{ // cf_ssdadas_bdd_360_480_0.95_6.3G / cf_ssdtraffic_360_480_0.9_11.6G
+    "background","car","cycle","person"};
+static vector<string> ssdmobilenetv2_map{ // cf_ssdmobilenetv2_bdd_360_480_6.57G / cf_ssdpedestrian_coco_360_640_0.97_5.9G
+    "background","person","rider","car","truck",
+    "bus","train","motor","bike","sign","light"};
+static vector<string> coco_map {
+    "background", "person", "bicycle", "car", "motorbike", "aeroplane", "bus", "train", "truck", "boat", "traffic light",
+    "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat", "dog", "horse", "sheep", "cow", "elephant",
+    "bear", "zebra", "giraffe", "backpack", "umbrella", "handbag", "tie", "suitcase", "frisbee", "skis", "snowboard",
+    "sports ball", "kite", "baseball bat", "baseball glove", "skateboard", "surfboard", "tennis racket", "bottle",
+    "wine glass", "cup", "fork", "knife", "spoon", "bowl", "banana", "apple", "sandwich", "orange", "broccoli", "carrot",
+    "hot dog", "pizza", "donut", "cake", "chair", "sofa", "pottedplant", "bed", "diningtable", "toilet", "tvmonitor",
+    "laptop", "mouse", "remote", "keyboard", "cell phone", "microwave", "oven", "toaster", "sink", "refrigerator",
+    "book", "clock", "vase", "scissors", "teddy bear", "hair drier", "toothbrush"};
 
 static map<string, vector<string>> label_map = {
     {"yolov2_voc", VOC_map},
@@ -46,8 +60,16 @@ static map<string, vector<string>> label_map = {
     {"yolov3_adas_pruned_0_9", cityscapes_map},
     {"yolov3_bdd", bdd_map},
     {"yolov3_voc", VOC_map},
-    {"yolov3_voc_tf", VOC_map}
+    {"yolov3_voc_tf", VOC_map},
+    {"ssd_adas_pruned_0_95", ssdadas_map},
+    {"ssd_mobilenet_v2", ssdmobilenetv2_map},
+    {"ssd_pedestrain_pruned_0_97", ssdmobilenetv2_map},
+    {"ssd_traffic_pruned_0_9", ssdadas_map},
+    {"ssd_mobilenet_v1_coco_tf", coco_map},
+    {"ssd_mobilenet_v2_coco_tf", coco_map},
+    {"ssd_resnet_50_fpn_coco_tf", coco_map}
 };
+
 
 /**
  *@struct Result
@@ -173,7 +195,7 @@ static cv::Mat process_result_label(cv::Mat &image,
                       color, 1, 1, 0);
         
         stringstream ss;
-        ss << labels[label] << ": " << fixed << setprecision(2) << confidence << endl;
+        ss << labels[label] << " [" << label << "]: " << fixed << setprecision(2) << confidence << endl;
         cv::putText(image, ss.str(), cv::Point(xmin, ymin-5),
             cv::FONT_HERSHEY_SIMPLEX, 0.5, color, 1);
     }
