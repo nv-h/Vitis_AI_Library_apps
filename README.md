@@ -20,7 +20,6 @@ video_demo_app <model_name> <video_num> [-t <thread_num>]
 video_single_th_app <model_name> <video_num>
 ```
 
-
 * `model_name` : 使用できるモデルは、`/usr/share/vitis_ai_library/models`にあるものだけと思われる。現状、以下に対応。  
     + Yolo v2: `yolov2_voc` `yolov2_voc_pruned_0_66` `yolov2_voc_pruned_0_71` `yolov2_voc_pruned_0_77`
     + Yolo v3: `yolov3_adas_pruned_0_9` `yolov3_bdd` `yolov3_voc` `yolov3_voc_tf`
@@ -28,6 +27,10 @@ video_single_th_app <model_name> <video_num>
     + SSD Tensorflow:`ssd_mobilenet_v1_coco_tf` `ssd_mobilenet_v2_coco_tf` `ssd_resnet_50_fpn_coco_tf`
 * `video_num` : Integer (X of `/dev/videoX`)
 * `thread_num` : Xilinxが用意しているデモライブラリでのスレッド指定。DPUとのデータのやり取りが高速になる。
+
+動作イメージ
+
+![yolov2_pruned_0_77.gif](images/yolov2_pruned_0_77.gif)
 
 
 # Performance (fps) on ultra96v2
@@ -66,3 +69,17 @@ ultra96v2ではDPUが一つしか実装できないのでマルチスレッド�
 | `ssd_mobilenet_v1_coco_tf`   | 12 |
 | `ssd_mobilenet_v2_coco_tf`   | 11 |
 | `ssd_resnet_50_fpn_coco_tf`  |  0 |
+
+# Demo pictures
+
+yolov3_voc
+![yolov3_voc.png](images\yolov3_voc.png)
+
+yolov2_voc
+![yolov2_voc.png](images\yolov2_voc.png)
+
+ssd_mobilenet_v2
+![ssd_mobilenet_v2.png](images/ssd_mobilenet_v2.png)
+
+ssd_mobilenet_v2_coco_tf
+![ssd_mobilenet_v2_coco_tf.png](images/ssd_mobilenet_v2_coco_tf.png)

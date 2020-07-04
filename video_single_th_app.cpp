@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
 
         auto result_frame = process_result_label(frame, *result, labels, fps);
 
-        cv::imshow("", result_frame);
+        cv::imshow(model_name, result_frame);
         int key = cv::waitKey(1);
         if (key == 'q') {
             break;
