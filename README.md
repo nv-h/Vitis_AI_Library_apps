@@ -8,20 +8,33 @@ Vitis AI Libraryを使用したアプリケーションを作成、動作確認�
 
 # Usage
 
+Xilinxが用意しているデモ
+
 ```sh
-video_demo_app <model_name> [-t <thread_num>]
+video_demo_app <model_name> <video_num> [-t <thread_num>]
 ```
 
-* `model_name` :使用できるモデルは、`/usr/share/vitis_ai_library/models`にあるものだけと思われる。現状、以下に対応。  
+シングルスレッド
+
+```sh
+video_single_th_app <model_name> <video_num>
+```
+
+
+* `model_name` : 使用できるモデルは、`/usr/share/vitis_ai_library/models`にあるものだけと思われる。現状、以下に対応。  
     + Yolo v3: `yolov3_adas_pruned_0_9` `yolov3_bdd` `yolov3_voc` `yolov3_voc_tf`
-* `thread_num`: Xilinxが用意しているデモライブラリでのスレッド指定。DPUとのデータのやり取りが高速になる。
+* `video_num` : Integer (X of `/dev/videoX`)
+* `thread_num` : Xilinxが用意しているデモライブラリでのスレッド指定。DPUとのデータのやり取りが高速になる。
 
 
 # Performance (fps) on ultra96v2
 
-ultra96v2ではDPUが一つしか実装できないのでマルチスレッドの効果はほとんどない？
+Using USB Web Camera C615 @640*360 (X forwarding)
 
-Using USB Web Camera C615 @640*480 (X forwarding)
+
+## video_demo_app using `vitis::ai::main_for_video_demo()`
+
+ultra96v2ではDPUが一つしか実装できないのでマルチスレッドの効果はほとんどない？
 
 |          model           | -t 1 | -t 2 | -t 4 |
 |--------------------------|------|------|------|
@@ -29,3 +42,7 @@ Using USB Web Camera C615 @640*480 (X forwarding)
 | `yolov3_bdd`             |    5 |    5 |    5 |
 | `yolov3_voc`             |    5 |    5 |    5 |
 | `yolov3_voc_tf`          |    5 |    5 |    5 |
+
+## video_single_th_app
+
+未計測

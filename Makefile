@@ -7,7 +7,7 @@ LDFLAGS = -lopencv_core -lopencv_video -lopencv_videoio \
 
 AI_LDFLAGS = -lvitis_ai_library-yolov3
 
-APPS = video_demo_app
+APPS = video_demo_app video_single_th_app
 
 default:
 		make all
@@ -15,6 +15,9 @@ default:
 all: $(APPS)
 
 video_demo_app: video_demo_app.o
+		$(CXX) -o $@ $^ $(LDFLAGS) $(AI_LDFLAGS)
+
+video_single_th_app: video_single_th_app.o
 		$(CXX) -o $@ $^ $(LDFLAGS) $(AI_LDFLAGS)
 
 clean:
