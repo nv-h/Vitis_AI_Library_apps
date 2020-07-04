@@ -27,6 +27,7 @@ int main(int argc, char *argv[]) {
     // 現状のyolov3の場合、以下の4つ
     //   yolov3_adas_pruned_0_9, yolov3_bdd, yolov3_voc, yolov3_voc_tf
     string model_name = argv[1];
+    vector<string> labels = label_map[model_name];
     // 強制的にinteger化
     int video_num = atoi(argv[2]);
 
@@ -46,7 +47,7 @@ int main(int argc, char *argv[]) {
         cap >> frame;
         auto dpu_result = dpu_model->run(frame);
 
-        auto result_frame = process_result(frame, dpu_result, false);
+        auto result_frame = process_result_label(frame, dpu_result, labels);
 
         cv::imshow("", result_frame);
         int key = cv::waitKey(1);
