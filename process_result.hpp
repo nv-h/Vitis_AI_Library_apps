@@ -43,14 +43,102 @@ static vector<string> ssdmobilenetv2_map{ // cf_ssdmobilenetv2_bdd_360_480_6.57G
     "background","person","rider","car","truck",
     "bus","train","motor","bike","sign","light"};
 static vector<string> coco_map {
-    "background", "person", "bicycle", "car", "motorbike", "aeroplane", "bus", "train", "truck", "boat", "traffic light",
-    "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat", "dog", "horse", "sheep", "cow", "elephant",
-    "bear", "zebra", "giraffe", "backpack", "umbrella", "handbag", "tie", "suitcase", "frisbee", "skis", "snowboard",
-    "sports ball", "kite", "baseball bat", "baseball glove", "skateboard", "surfboard", "tennis racket", "bottle",
-    "wine glass", "cup", "fork", "knife", "spoon", "bowl", "banana", "apple", "sandwich", "orange", "broccoli", "carrot",
-    "hot dog", "pizza", "donut", "cake", "chair", "sofa", "pottedplant", "bed", "diningtable", "toilet", "tvmonitor",
-    "laptop", "mouse", "remote", "keyboard", "cell phone", "microwave", "oven", "toaster", "sink", "refrigerator",
-    "book", "clock", "vase", "scissors", "teddy bear", "hair drier", "toothbrush"};
+     /*1*/ "background",
+     // https://github.com/amikelive/coco-labels/blob/master/coco-labels-paper.txt
+     // https://github.com/amikelive/coco-labels/blob/master/coco-labels-2014_2017.txt
+     // paper        //     2014_2017
+    "person",        // 2   "person",
+    "bicycle",       // 3   "bicycle",
+    "car",           // 4   "car",
+    "motorcycle",    // 5   "motorbike",
+    "airplane",      // 6   "aeroplane",
+    "bus",           // 7   "bus",
+    "train",         // 8   "train",
+    "truck",         // 9   "truck",
+    "boat",          // 10  "boat",
+    "traffic light", // 11  "traffic light",
+    "fire hydrant",  // 12  "fire hydrant",
+    "street sign",   // 13  "stop sign",
+    "stop sign",     // 14  "parking meter",
+    "parking meter", // 15  "bench",
+    "bench",         // 16  "bird",
+    "bird",          // 17  "cat",
+    "cat",           // 18  "dog",
+    "dog",           // 19  "horse",
+    "horse",         // 20  "sheep",
+    "sheep",         // 21  "cow",
+    "cow",           // 22  "elephant",
+    "elephant",      // 23  "bear",
+    "bear",          // 24  "zebra",
+    "zebra",         // 25  "giraffe",
+    "giraffe",       // 26  "backpack",
+    "hat",           // 27  "umbrella",
+    "backpack",      // 28  "handbag",
+    "umbrella",      // 29  "tie",
+    "shoe",          // 30  "suitcase",
+    "eye glasses",   // 31  "frisbee",
+    "handbag",       // 32  "skis",
+    "tie",           // 33  "snowboard",
+    "suitcase",      // 34  "sports ball",
+    "frisbee",       // 35  "kite",
+    "skis",          // 36  "baseball bat",
+    "snowboard",     // 37  "baseball glove",
+    "sports ball",   // 38  "skateboard",
+    "kite",          // 39  "surfboard",
+    "baseball bat",  // 40  "tennis racket",
+    "baseball glove",// 41  "bottle",
+    "skateboard",    // 42  "wine glass",
+    "surfboard",     // 43  "cup",
+    "tennis racket", // 44  "fork",
+    "bottle",        // 45  "knife",
+    "plate",         // 46  "spoon",
+    "wine glass",    // 47  "bowl",
+    "cup",           // 48  "banana",
+    "fork",          // 49  "apple",
+    "knife",         // 50  "sandwich",
+    "spoon",         // 51  "orange",
+    "bowl",          // 52  "broccoli",
+    "banana",        // 53  "carrot",
+    "apple",         // 54  "hot dog",
+    "sandwich",      // 55  "pizza",
+    "orange",        // 56  "donut",
+    "broccoli",      // 57  "cake",
+    "carrot",        // 58  "chair",
+    "hot dog",       // 59  "sofa",
+    "pizza",         // 60  "pottedplant",
+    "donut",         // 61  "bed",
+    "cake",          // 62  "diningtable",
+    "chair",         // 63  "toilet",
+    "couch",         // 64  "tvmonitor",
+    "potted plant",  // 65  "laptop",
+    "bed",           // 66  "mouse",
+    "mirror",        // 67  "remote",
+    "dining table",  // 68  "keyboard",
+    "window",        // 69  "cell phone",
+    "desk",          // 70  "microwave",
+    "toilet",        // 71  "oven",
+    "door",          // 72  "toaster",
+    "tv",            // 73  "sink",
+    "laptop",        // 74  "refrigerator",
+    "mouse",         // 75  "book",
+    "remote",        // 76  "clock",
+    "keyboard",      // 77  "vase",
+    "cell phone",    // 78  "scissors",
+    "microwave",     // 79  "teddy bear",
+    "oven",          // 80  "hair drier",
+    "toaster",       // 81  "toothbrush"
+    "sink",          // 82 
+    "refrigerator",  // 83 
+    "blender",       // 84 
+    "book",          // 85 
+    "clock",         // 86 
+    "vase",          // 87 
+    "scissors",      // 88 
+    "teddy bear",    // 89 
+    "hair drier",    // 90 
+    "toothbrush",    // 91 
+    "hair brush"     // 92 
+    };
 
 static map<string, vector<string>> label_map = {
     {"yolov2_voc", VOC_map},
@@ -195,7 +283,14 @@ static cv::Mat process_result_label(cv::Mat &image,
                       color, 1, 1, 0);
         
         stringstream ss;
-        ss << labels[label] << " [" << label << "]: " << fixed << setprecision(2) << confidence << endl;
+        if (labels.size() < label) {
+            ss <<               "??? [" << label << "]: " << fixed << setprecision(2) << confidence << endl;
+            cout << "Warning! label: " << label << endl;
+        }
+        else {
+            ss << labels[label] << " [" << label << "]: " << fixed << setprecision(2) << confidence << endl;
+        }
+        
         cv::putText(image, ss.str(), cv::Point(xmin, ymin-5),
             cv::FONT_HERSHEY_SIMPLEX, 0.5, color, 1);
     }

@@ -15,6 +15,11 @@
 // Vitis-AI-Library\overview\samples\yolov3\process_result.hpp
 #include "./process_result.hpp"
 
+// Xilinxデモに合わせたが、特に意味はない。
+// ただし、大きくしすぎると表示に時間がかかる。
+#define WIDTH 640
+#define HEIGHT 360
+
 using namespace std;
 
 void print_usage_and_exit(char *argv[]) {
@@ -52,10 +57,8 @@ int main(int argc, char *argv[]) {
         print_usage_and_exit(argv);
     }
 
-    // Xilinxデモに合わせたが、特に意味はない。
-    // ただし、大きくしすぎると表示に時間がかかる。
-    cap.set(CV_CAP_PROP_FRAME_WIDTH, 640);
-    cap.set(CV_CAP_PROP_FRAME_HEIGHT, 360);
+    cap.set(CV_CAP_PROP_FRAME_WIDTH, WIDTH);
+    cap.set(CV_CAP_PROP_FRAME_HEIGHT, HEIGHT);
 
     cv::Mat frame;
     cv::TickMeter tm;
@@ -89,6 +92,11 @@ int main(int argc, char *argv[]) {
         cerr << "Error! Unsupported model: " << model_name <<  endl;
         print_usage_and_exit(argv);
     }
+
+    // window size follow manual change
+    // (Default setting is WINDOW_AUTOSIZE that fixed size window)
+    cv::namedWindow(model_name, cv::WINDOW_NORMAL);
+    cv::resizeWindow(model_name, WIDTH, HEIGHT);
 
     tm.start();
     while (true) {
