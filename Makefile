@@ -5,7 +5,9 @@ LDFLAGS = -lopencv_core -lopencv_video -lopencv_videoio \
 		-lopencv_imgproc -lopencv_imgcodecs -lopencv_highgui \
 		-lglog -pthread
 
-AI_LDFLAGS = -lvitis_ai_library-yolov3
+AI_LDFLAGS = \
+	-lvitis_ai_library-yolov3 \
+	-lvitis_ai_library-yolov2
 
 APPS = video_demo_app video_single_th_app
 

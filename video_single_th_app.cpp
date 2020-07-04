@@ -7,6 +7,7 @@
 
 #include <vitis/ai/demo.hpp>
 #include <vitis/ai/yolov3.hpp>
+#include <vitis/ai/yolov2.hpp>
 
 // 以下から拝借
 // Vitis-AI-Library\overview\samples\yolov3\process_result.hpp
@@ -47,16 +48,33 @@ int main(int argc, char *argv[]) {
     float fps = 0.0;
 
     // ネットワークモデルごとに固有のオブジェクトを呼ぶ必要がある
-    auto dpu_model = vitis::ai::YOLOv3::create(model_name);
+    unique_ptr<Model> dpu_model;
+    if (model_name.compare(0, 6, "yolov3") == 0) {
+        dpu_model = create_dpu_model(
+            [model_name] {return vitis::ai::YOLOv3::create(model_name);}
+        );
+    }
+    else if (model_name.compare(0, 6, "yolov2") == 0) {
+        dpu_model = create_dpu_model(
+            [model_name] {return vitis::ai::YOLOv2::create(model_name);}
+        );
+    }
+    else {
+        cerr << "Error! Unsupported model: " << model_name <<  endl;
+        return -1;
+    }
 
     tm.start();
     while (true) {
         cap >> frame;
 
-        // ネットワークモデルごとに返ってくる結果が違う(物体検知ならほぼ同じではある)
+        // ネットワークモデルごとに返ってくる結果が違う
+        // 物体検知なら確認した限りは同じだったので、汎用の結果構造体にキャストする
+        // これにより、process_result_label()をモデルに依存しない形にできる
         auto dpu_result = dpu_model->run(frame);
+        Result *result = (Result *)&dpu_result;
 
-        auto result_frame = process_result_label(frame, dpu_result, labels, fps);
+        auto result_frame = process_result_label(frame, *result, labels, fps);
 
         cv::imshow("", result_frame);
         int key = cv::waitKey(1);

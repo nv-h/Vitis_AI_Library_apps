@@ -22,6 +22,7 @@ video_single_th_app <model_name> <video_num>
 
 
 * `model_name` : 使用できるモデルは、`/usr/share/vitis_ai_library/models`にあるものだけと思われる。現状、以下に対応。  
+    + Yolo v2: `yolov2_voc` `yolov2_voc_pruned_0_66` `yolov2_voc_pruned_0_71` `yolov2_voc_pruned_0_77`
     + Yolo v3: `yolov3_adas_pruned_0_9` `yolov3_bdd` `yolov3_voc` `yolov3_voc_tf`
 * `video_num` : Integer (X of `/dev/videoX`)
 * `thread_num` : Xilinxが用意しているデモライブラリでのスレッド指定。DPUとのデータのやり取りが高速になる。
@@ -46,10 +47,14 @@ ultra96v2ではDPUが一つしか実装できないのでマルチスレッド�
 
 ## video_single_th_app
 
-|          model           |      |
-|--------------------------|------|
-| `yolov3_adas_pruned_0_9` |   10 |
-| `yolov3_bdd`             |    3 |
-| `yolov3_voc`             |    3 |
-| `yolov3_voc_tf`          |    3 |
+|          model           |    |
+|--------------------------|----|
+| `yolov2_voc`             |  5 |
+| `yolov2_voc_pruned_0_66` |  9 |
+| `yolov2_voc_pruned_0_71` |  9 |
+| `yolov2_voc_pruned_0_77` |  9 |
+| `yolov3_adas_pruned_0_9` | 10 |
+| `yolov3_bdd`             |  3 |
+| `yolov3_voc`             |  3 |
+| `yolov3_voc_tf`          |  3 |
 
