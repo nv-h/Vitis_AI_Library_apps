@@ -42,6 +42,11 @@ fpsは小数点以下切り捨てで測定した。同一条件でもけっこ�
 ## video_demo_app using `vitis::ai::main_for_video_demo()`
 
 ultra96v2ではDPUが一つしか実装できないのでDPUで律速になるような、重いモデルではマルチスレッドがほとんど効果がない。
+スレッド構成は以下のようになっていて、DPUスレッドの数を引数で変更できるようになっている。
+
+```
+capture thread ---> DPU Threads(-t N) ---> imshow thread
+```
 
 |            model             | -t 1 | -t 2 | -t 4 |
 |------------------------------|------|------|------|
@@ -63,22 +68,34 @@ ultra96v2ではDPUが一つしか実装できないのでDPUで律速になる�
 
 ## video_single_th_app / video_multi_th_app
 
+single_thはシリアル処理。
+
+```
+capture, DPU, imshow (serial processing)
+```
+
+multi_thは下記のようなマルチスレッド処理。
+
+```
+capture thread ---> DPU Thread ---> imshow thread
+```
+
 |            model             | single thread | multi threads |
 |------------------------------|---------------|---------------|
 | `yolov2_voc`                 |             5 |             8 |
-| `yolov2_voc_pruned_0_66`     |             9 |            13 |
-| `yolov2_voc_pruned_0_71`     |             9 |            15 |
-| `yolov2_voc_pruned_0_77`     |             9 |            16 |
-| `yolov3_adas_pruned_0_9`     |            10 |             8 |
-| `yolov3_bdd`                 |             3 |             3 |
-| `yolov3_voc`                 |             3 |             4 |
-| `yolov3_voc_tf`              |             3 |             4 |
-| `ssd_adas_pruned_0_95`       |            12 |            22 |
-| `ssd_mobilenet_v2`           |             7 |             6 |
-| `ssd_pedestrain_pruned_0_97` |            13 |            22 |
-| `ssd_traffic_pruned_0_9`     |            10 |            16 |
-| `ssd_mobilenet_v1_coco_tf`   |            12 |            12 |
-| `ssd_mobilenet_v2_coco_tf`   |            11 |            14 |
+| `yolov2_voc_pruned_0_66`     |             9 |            19 |
+| `yolov2_voc_pruned_0_71`     |             9 |            23 |
+| `yolov2_voc_pruned_0_77`     |             9 |            26 |
+| `yolov3_adas_pruned_0_9`     |            10 |            11 |
+| `yolov3_bdd`                 |             3 |             4 |
+| `yolov3_voc`                 |             3 |             5 |
+| `yolov3_voc_tf`              |             3 |             5 |
+| `ssd_adas_pruned_0_95`       |            12 |            27 |
+| `ssd_mobilenet_v2`           |             7 |            10 |
+| `ssd_pedestrain_pruned_0_97` |            13 |            29 |
+| `ssd_traffic_pruned_0_9`     |            10 |            20 |
+| `ssd_mobilenet_v1_coco_tf`   |            12 |            19 |
+| `ssd_mobilenet_v2_coco_tf`   |            11 |            20 |
 | `ssd_resnet_50_fpn_coco_tf`  |             0 |             0 |
 
 # Demo pictures

@@ -15,9 +15,10 @@
 // Vitis-AI-Library\overview\samples\yolov3\process_result.hpp
 #include "./process_result.hpp"
 
+// Xilinx demo.hppに合わせる
 // HEIGHT=360は対応していないカメラがあるので注意
 #define WIDTH 640
-#define HEIGHT 480
+#define HEIGHT 360
 #define FPS 60
 
 using namespace std;
