@@ -11,7 +11,7 @@ AI_LDFLAGS = \
 	-lvitis_ai_library-tfssd \
 	-lvitis_ai_library-ssd
 
-APPS = video_demo_app video_single_th_app
+APPS = video_demo_app video_single_th_app video_multi_th_app
 
 default:
 		make all
@@ -22,6 +22,9 @@ video_demo_app: video_demo_app.o
 		$(CXX) -o $@ $^ $(LDFLAGS) $(AI_LDFLAGS)
 
 video_single_th_app: video_single_th_app.o
+		$(CXX) -o $@ $^ $(LDFLAGS) $(AI_LDFLAGS)
+
+video_multi_th_app: video_multi_th_app.o
 		$(CXX) -o $@ $^ $(LDFLAGS) $(AI_LDFLAGS)
 
 clean:

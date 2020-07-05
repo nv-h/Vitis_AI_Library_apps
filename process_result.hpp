@@ -21,6 +21,10 @@
 #include <iostream>
 #include <iomanip>
 
+#include <mutex>
+#include <thread>
+#include <queue>
+
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
@@ -230,6 +234,92 @@ unique_ptr<Model> create_dpu_model(const FactoryMethod &factory_method) {
     );
 }
 
+/*
+ *model string --> model object
+ */
+unique_ptr<Model> get_dpu_model(string name) {
+    // ネットワークモデルごとに固有のオブジェクトを呼ぶ必要がある
+    if (name.compare(0, 6, "yolov3") == 0) {
+        return create_dpu_model(
+            [name] {return vitis::ai::YOLOv3::create(name);}
+        );
+    }
+    else if (name.compare(0, 6, "yolov2") == 0) {
+        return create_dpu_model(
+            [name] {return vitis::ai::YOLOv2::create(name);}
+        );
+    }
+    else if (name.compare(0, 3, "ssd") == 0) {
+        if (name.compare(name.size()-3, 3, "_tf") == 0) {
+            return create_dpu_model(
+                [name] {return vitis::ai::TFSSD::create(name);}
+            );
+        }
+        else {
+            return create_dpu_model(
+                [name] {return vitis::ai::SSD::create(name);}
+            );
+        }
+    }
+    else {
+        return NULL;
+    }
+}
+
+/*
+ * Queue with fps mesurment
+ *   https://github.com/opencv/opencv/blob/master/samples/dnn/object_detection.cpp
+ *   https://github.com/opencv/opencv/blob/master/LICENSE
+ */
+template <typename T>
+class QueueFPS : public std::queue<T>
+{
+public:
+    QueueFPS() : counter(0) {}
+
+    void push(const T& entry)
+    {
+        std::lock_guard<std::mutex> lock(mutex);
+
+        std::queue<T>::push(entry);
+        counter += 1;
+        if (counter == 1)
+        {
+            // Start counting from a second frame (warmup).
+            tm.reset();
+            tm.start();
+        }
+    }
+
+    T get()
+    {
+        std::lock_guard<std::mutex> lock(mutex);
+        T entry = this->front();
+        this->pop();
+        return entry;
+    }
+
+    float getFPS()
+    {
+        tm.stop();
+        double fps = counter / tm.getTimeSec();
+        tm.start();
+        return static_cast<float>(fps);
+    }
+
+    void clear()
+    {
+        std::lock_guard<std::mutex> lock(mutex);
+        while (!this->empty())
+            this->pop();
+    }
+
+    unsigned int counter;
+
+private:
+    cv::TickMeter tm;
+    std::mutex mutex;
+};
 
 /*
  *   The color loops every 27 times,
@@ -294,9 +384,9 @@ static cv::Mat process_result_tfssd(
 }
 
 static cv::Mat process_result_label(cv::Mat &image,
-                              const Result &result,
+                              const Result *result,
                               const vector<string> labels, const float fps) {
-    for (const auto bbox : result.bboxes) {
+    for (const auto bbox : result->bboxes) {
         int label = bbox.label;
         auto color = getColor(label);
         float xmin = bbox.x * image.cols + 1;

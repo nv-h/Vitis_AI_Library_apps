@@ -35,11 +35,11 @@ video_single_th_app <model_name> <video_num>
 
 # Performance (fps) on ultra96v2
 
-Using USB Web Camera C615 @640*360 (X forwarding).
+Using USB Web Camera C615 (X forwarding).
 fpsは小数点以下切り捨てで測定した。同一条件でもけっこうばらつきがあると思われる。
 
 
-## video_demo_app using `vitis::ai::main_for_video_demo()`
+## video_demo_app using `vitis::ai::main_for_video_demo()` @ 640*360
 
 ultra96v2ではDPUが一つしか実装できないのでDPUで律速になるような、重いモデルではマルチスレッドがほとんど効果がない。
 
@@ -61,25 +61,25 @@ ultra96v2ではDPUが一つしか実装できないのでDPUで律速になる�
 | `ssd_mobilenet_v2_coco_tf`   |   20 |   21 |   22 |
 | `ssd_resnet_50_fpn_coco_tf`  |    0 |    0 |    1 |
 
-## video_single_th_app
+## video_single_th_app / video_multi_th_app @ 640*480
 
-|            model             |    |
-|------------------------------|----|
-| `yolov2_voc`                 |  5 |
-| `yolov2_voc_pruned_0_66`     |  9 |
-| `yolov2_voc_pruned_0_71`     |  9 |
-| `yolov2_voc_pruned_0_77`     |  9 |
-| `yolov3_adas_pruned_0_9`     | 10 |
-| `yolov3_bdd`                 |  3 |
-| `yolov3_voc`                 |  3 |
-| `yolov3_voc_tf`              |  3 |
-| `ssd_adas_pruned_0_95`       | 12 |
-| `ssd_mobilenet_v2`           |  7 |
-| `ssd_pedestrain_pruned_0_97` | 13 |
-| `ssd_traffic_pruned_0_9`     | 10 |
-| `ssd_mobilenet_v1_coco_tf`   | 12 |
-| `ssd_mobilenet_v2_coco_tf`   | 11 |
-| `ssd_resnet_50_fpn_coco_tf`  |  0 |
+|            model             | single thread | multi threads |
+|------------------------------|---------------|---------------|
+| `yolov2_voc`                 |             5 |             8 |
+| `yolov2_voc_pruned_0_66`     |             9 |            13 |
+| `yolov2_voc_pruned_0_71`     |             9 |            15 |
+| `yolov2_voc_pruned_0_77`     |             9 |            16 |
+| `yolov3_adas_pruned_0_9`     |            10 |             8 |
+| `yolov3_bdd`                 |             3 |             3 |
+| `yolov3_voc`                 |             3 |             4 |
+| `yolov3_voc_tf`              |             3 |             4 |
+| `ssd_adas_pruned_0_95`       |            12 |            22 |
+| `ssd_mobilenet_v2`           |             7 |             6 |
+| `ssd_pedestrain_pruned_0_97` |            13 |            22 |
+| `ssd_traffic_pruned_0_9`     |            10 |            16 |
+| `ssd_mobilenet_v1_coco_tf`   |            12 |            12 |
+| `ssd_mobilenet_v2_coco_tf`   |            11 |            14 |
+| `ssd_resnet_50_fpn_coco_tf`  |             0 |             0 |
 
 # Demo pictures
 
