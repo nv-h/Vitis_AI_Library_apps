@@ -33,7 +33,7 @@ video_single_th_app <model_name> <video_num>
 ![yolov2_pruned_0_77.gif](images/yolov2_pruned_0_77_compressed.gif)
 
 
-# Performance (fps) on ultra96v2 @ 640*480
+# Performance (fps) on ultra96v2 @ 640*360
 
 Using USB Web Camera C615 (X forwarding).
 fpsは小数点以下切り捨てで測定した。同一条件でもけっこうばらつきがあると思われる。
