@@ -17,7 +17,7 @@
 // Vitis-AI-Library\overview\samples\yolov3\process_result.hpp
 #include "./process_result.hpp"
 
-// HEIGHT=360は対応していないカメラがあるので、VGAにした。
+// HEIGHT=360は対応していないカメラがあるので注意
 #define WIDTH 640
 #define HEIGHT 480
 #define FPS 60
@@ -88,11 +88,11 @@ int main(int argc, char *argv[]) {
     });
 
     // DPU processing thread
-    QueueFPS<Result> resultQueue;
-    QueueFPS<cv::Mat> resultImegeQueue;
+    QueueFPS<cv::Mat> resultQueue;
     thread dpuThread([&](){
         while (process) {
             cv::Mat frame;
+            cv::Mat post_frame;
 
             // Get a next frame
             if (framesQueue.empty()) {
@@ -106,29 +106,9 @@ int main(int argc, char *argv[]) {
             // これにより、process_result_label()をモデルに依存しない形にできる
             auto dpu_result = dpu_model->run(frame);
             Result *result_p = (Result *)&dpu_result;
-            resultQueue.push(*result_p);
-            resultImegeQueue.push(frame.clone());
-        }
-    });
-
-    // Post processing thread
-    // このスレッドはdpuThreadに統合しても性能に影響はないかもしれない
-    QueueFPS<cv::Mat> postQueue;
-    thread postThread([&](){
-        while (process) {
-            Result result;
-            cv::Mat frame;
-            cv::Mat post_frame;
-
-            // Get a next frame
-            if (resultQueue.empty() || resultImegeQueue.empty()) {
-                continue; // wait for dpu process
-            }
-            result = resultQueue.get();
-            frame = resultImegeQueue.get();
-
-            post_frame = process_result_label(frame, &result, labels, resultQueue.getFPS());
-            postQueue.push(post_frame);
+            // post procces はこのスレッドで実行したほうが高速な模様
+            post_frame = process_result_label(frame, result_p, labels, resultQueue.getFPS());
+            resultQueue.push(post_frame);
         }
     });
 
@@ -140,11 +120,11 @@ int main(int argc, char *argv[]) {
     while (true) {
         cv::Mat frame;
         // Get a next frame
-        if (postQueue.empty()) {
+        if (resultQueue.empty()) {
             continue; // wait for dpu process
         }
 
-        frame = postQueue.get();
+        frame = resultQueue.get();
         cv::imshow(model_name, frame);
         int key = cv::waitKey(1);
         if (key == 'q') {
@@ -155,6 +135,5 @@ int main(int argc, char *argv[]) {
     process = false;
     framesThread.join();
     dpuThread.join();
-    postThread.join();
     cap.release();
 }

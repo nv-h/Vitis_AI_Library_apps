@@ -33,13 +33,13 @@ video_single_th_app <model_name> <video_num>
 ![yolov2_pruned_0_77.gif](images/yolov2_pruned_0_77_compressed.gif)
 
 
-# Performance (fps) on ultra96v2
+# Performance (fps) on ultra96v2 @ 640*480
 
 Using USB Web Camera C615 (X forwarding).
 fpsは小数点以下切り捨てで測定した。同一条件でもけっこうばらつきがあると思われる。
 
 
-## video_demo_app using `vitis::ai::main_for_video_demo()` @ 640*360
+## video_demo_app using `vitis::ai::main_for_video_demo()`
 
 ultra96v2ではDPUが一つしか実装できないのでDPUで律速になるような、重いモデルではマルチスレッドがほとんど効果がない。
 
@@ -61,7 +61,7 @@ ultra96v2ではDPUが一つしか実装できないのでDPUで律速になる�
 | `ssd_mobilenet_v2_coco_tf`   |   20 |   21 |   22 |
 | `ssd_resnet_50_fpn_coco_tf`  |    0 |    0 |    1 |
 
-## video_single_th_app / video_multi_th_app @ 640*480
+## video_single_th_app / video_multi_th_app
 
 |            model             | single thread | multi threads |
 |------------------------------|---------------|---------------|

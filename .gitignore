@@ -1,3 +1,4 @@
 *.o
 video_demo_app
 video_single_th_app
+video_multi_th_app

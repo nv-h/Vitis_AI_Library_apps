@@ -15,7 +15,7 @@
 // Vitis-AI-Library\overview\samples\yolov3\process_result.hpp
 #include "./process_result.hpp"
 
-// HEIGHT=360は対応していないカメラがあるので、VGAにした。
+// HEIGHT=360は対応していないカメラがあるので注意
 #define WIDTH 640
 #define HEIGHT 480
 #define FPS 60
